@@ -1,8 +1,9 @@
 pandas
-scikit-learn
+scikit-learn==1.6.1
 imbalanced-learn
 streamlit
 joblib
 matplotlib
 seaborn
 shap
+
