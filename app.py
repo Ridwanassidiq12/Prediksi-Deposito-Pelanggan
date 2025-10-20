@@ -79,6 +79,7 @@ if input_method == 'Manual':
 
         # Terapkan feature engineering sebelum prediksi
         input_data = feature_engineering(input_data)
+        st.write("Kolom setelah feature engineering:", input_data.columns.tolist())
 
         # Drop kolom 'index' dan 'level_0' jika ada
         for col in ['index', 'level_0']:
@@ -147,3 +148,4 @@ else:
                 file_name='hasil_prediksi_bank_marketing.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             )
+
