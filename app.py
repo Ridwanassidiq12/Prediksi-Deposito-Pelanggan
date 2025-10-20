@@ -81,24 +81,6 @@ if input_method == 'Manual':
         input_data = feature_engineering(input_data)
         st.write("Kolom setelah feature engineering:", input_data.columns.tolist())
 
-        # Drop kolom 'index' dan 'level_0' jika ada
-        for col in ['index', 'level_0']:
-            if col in input_data.columns:
-                input_data.drop(columns=col, inplace=True)
-
-        # Konversi kolom kategorikal ke string agar sesuai pipeline
-        categorical_cols = ['job', 'marital', 'education', 'default', 'housing', 'loan',
-                            'contact', 'month', 'day_of_week', 'poutcome',
-                            'age_group', 'season', 'pdays_group']
-
-        for col in categorical_cols:
-            if col in input_data.columns:
-                input_data[col] = input_data[col].astype(str)
-
-        # Debug: tampilkan kolom dan tipe data input
-        st.write("📊 Kolom input setelah feature engineering dan konversi tipe:")
-        st.write(input_data.dtypes)
-        st.write(input_data.columns.tolist())
 
         # Prediksi
         hasil = model.predict(input_data)[0]
@@ -148,4 +130,5 @@ else:
                 file_name='hasil_prediksi_bank_marketing.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             )
+
 
