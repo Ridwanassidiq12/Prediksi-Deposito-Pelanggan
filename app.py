@@ -86,7 +86,7 @@ if input_method == 'Manual':
             missing_cols = set(expected_cols) - set(input_data.columns)
             st.error(f"❗ Kolom yang hilang: {missing_cols}")
         except Exception as e:
-        st.warning("Tidak bisa mengambil expected feature names langsung dari model. Periksa input data secara manual.")
+            st.warning("Tidak bisa mengambil expected feature names langsung dari model. Periksa input data secara manual.")
 
 
         # Prediksi
@@ -137,6 +137,7 @@ else:
                 file_name='hasil_prediksi_bank_marketing.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             )
+
 
 
 
