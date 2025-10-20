@@ -11,10 +11,6 @@ model = joblib.load('best_model_pediksi_deposit.pkl')  # Ganti nama model sesuai
 # --- KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="Prediksi Nasabah Melakukan Deposit - Bank Marketing", layout="wide")
 st.title('🏦 Prediksi Nasabah Melakukan Deposit Nasabah - Bank Marketing')
-st.markdown("""
-Aplikasi ini memprediksi apakah nasabah akan **berlangganan produk (y=1)** berdasarkan data input kampanye pemasaran.  
-**Kolom `duration` tidak digunakan** karena dianggap menyebabkan data leakage.
-""")
 
 # --- SIDEBAR UNTUK INPUT METODE ---
 st.sidebar.header("Pilih Metode Input Data")
@@ -128,4 +124,5 @@ else:
                 file_name='hasil_prediksi_bank_marketing.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             )
+
 
