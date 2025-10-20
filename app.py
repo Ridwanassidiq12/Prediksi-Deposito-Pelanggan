@@ -76,6 +76,19 @@ if input_method == 'Manual':
         # Terapkan feature engineering sebelum prediksi
         input_data = feature_engineering(input_data)
 
+        # Tampilkan kolom yang ada di input
+        st.write("📊 Kolom input yang tersedia:", input_data.columns.tolist())
+        
+        # Coba ambil kolom yang diharapkan model (jika tersedia)
+        try:
+            expected_cols = model.feature_names_in_
+            st.write("📌 Kolom yang diharapkan model:", expected_cols.tolist())
+            missing_cols = set(expected_cols) - set(input_data.columns)
+            st.error(f"❗ Kolom yang hilang: {missing_cols}")
+        except Exception as e:
+        st.warning("Tidak bisa mengambil expected feature names langsung dari model. Periksa input data secara manual.")
+
+
         # Prediksi
         hasil = model.predict(input_data)[0]
         prob = model.predict_proba(input_data)[0][1]
@@ -124,5 +137,6 @@ else:
                 file_name='hasil_prediksi_bank_marketing.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             )
+
 
 
