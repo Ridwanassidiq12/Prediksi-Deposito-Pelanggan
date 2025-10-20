@@ -79,15 +79,13 @@ if input_method == 'Manual':
         # Tampilkan kolom yang ada di input
         st.write("📊 Kolom input yang tersedia:", input_data.columns.tolist())
         
-        # Coba ambil kolom yang diharapkan model (jika tersedia)
-        try:
-            expected_cols = model.feature_names_in_
-            st.write("📌 Kolom yang diharapkan model:", expected_cols.tolist())
-            missing_cols = set(expected_cols) - set(input_data.columns)
-            st.error(f"❗ Kolom yang hilang: {missing_cols}")
-        except Exception as e:
-            st.warning("Tidak bisa mengambil expected feature names langsung dari model. Periksa input data secara manual.")
-
+        # Drop kolom tidak penting jika ada
+        cols_to_drop = ['index', 'level_0']
+        for col in cols_to_drop:
+            if col in input_data.columns:
+                input_data.drop(columns=col, inplace=True)
+        # Tampilkan kolom input
+        st.write("📊 Kolom input yang tersedia:", input_data.columns.tolist())
 
         # Prediksi
         hasil = model.predict(input_data)[0]
@@ -137,6 +135,7 @@ else:
                 file_name='hasil_prediksi_bank_marketing.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             )
+
 
 
 
