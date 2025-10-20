@@ -6,6 +6,29 @@ from io import BytesIO
 # --- LOAD MODEL ---
 model = joblib.load('best_model_pediksi_deposit.pkl')  # Ganti nama model sesuai filemu
 
+# --- FUNGSI FEATURE ENGINEERING ---
+def feature_engineering(data_ml_drop):
+    data_ml_drop = data_ml_drop.copy()
+    data_ml_drop['loan_burden'] = ((data_ml_drop['housing']=='yes') & (data_ml_drop['loan']=='yes')).astype(int)
+    data_ml_drop['economic_stability'] = data_ml_drop['emp.var.rate'] + data_ml_drop['cons.conf.idx']
+    data_ml_drop['contact_count'] = data_ml_drop['previous'] + data_ml_drop['campaign']
+
+    bins = [16, 25, 35, 50, 98]
+    labels = ["Muda","Dewasa Muda","Dewasa","Lansia"]
+    data_ml_drop['age_group'] = pd.cut(data_ml_drop['age'], bins=bins, labels=labels, include_lowest=True).astype(str)
+
+    month_to_season = {
+        "mar":"spring","apr":"spring","may":"spring",
+        "jun":"summer","jul":"summer","aug":"summer",
+        "sep":"fall","oct":"fall","nov":"fall",
+        "dec":"winter","jan":"winter","feb":"winter"
+    }
+    data_ml_drop['season'] = data_ml_drop['month'].str.lower().map(month_to_season)
+
+    data_ml_drop['pdays_group'] = data_ml_drop['pdays'].apply(lambda x: 'No' if x==999 else 'Yes')
+
+    return data_ml_drop
+
 # --- KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="Prediksi Nasabah Melakukan Deposit Bank Marketing", layout="wide")
 st.title('🏦 Prediksi Nasabah Melakukan Deposit Nasabah Bank Marketing')
@@ -75,6 +98,9 @@ if input_method == 'Manual':
             'nr.employed': nr_employed
         }])
 
+        # Terapkan feature engineering sebelum prediksi
+        input_data = feature_engineering(input_data)
+
         # Prediksi
         hasil = model.predict(input_data)[0]
         prob = model.predict_proba(input_data)[0][1]
@@ -87,7 +113,7 @@ if input_method == 'Manual':
 # --- UPLOAD FILE ---
 else:
     file = st.sidebar.file_uploader("Upload file CSV atau Excel", type=["csv", "xlsx"])
-    
+
     if file is not None:
         if file.name.endswith('.csv'):
             df = pd.read_csv(file)
@@ -102,6 +128,9 @@ else:
         st.dataframe(df)
 
         if st.sidebar.button("Prediksi dari File"):
+            # Terapkan feature engineering sebelum prediksi
+            df = feature_engineering(df)
+
             predictions = model.predict(df)
             probabilities = model.predict_proba(df)[:, 1]
 
@@ -120,4 +149,3 @@ else:
                 file_name='hasil_prediksi_bank_marketing.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             )
-
