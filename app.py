@@ -4,7 +4,7 @@ import joblib
 from io import BytesIO
 
 # --- LOAD MODEL ---
-model = joblib.load('best_model_bank.pkl')  # Ganti nama model sesuai filemu
+model = joblib.load('best_model_pediksi_deposit.pkl')  # Ganti nama model sesuai filemu
 
 # --- KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="Prediksi Nasabah Melakukan Deposit Bank Marketing", layout="wide")
@@ -120,3 +120,4 @@ else:
                 file_name='hasil_prediksi_bank_marketing.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             )
+
