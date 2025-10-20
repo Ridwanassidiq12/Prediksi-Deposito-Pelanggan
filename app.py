@@ -9,8 +9,12 @@ from utils import feature_engineering
 model = joblib.load('best_model_pediksi_deposit.pkl')  # Ganti nama model sesuai filemu
 
 # --- KONFIGURASI HALAMAN ---
-st.set_page_config(page_title="Prediksi Nasabah Melakukan Deposit - Bank Marketing", layout="wide")
-st.title('🏦 Prediksi Nasabah Melakukan Deposit Nasabah - Bank Marketing')
+st.set_page_config(page_title="Prediksi Nasabah Melakukan Deposit Bank Marketing", layout="wide")
+st.title('🏦 Prediksi Nasabah Melakukan Deposit Nasabah Bank Marketing')
+st.markdown("""
+Aplikasi ini memprediksi apakah nasabah akan **berlangganan produk (y=1)** berdasarkan data input kampanye pemasaran.  
+**Kolom `duration` tidak digunakan** karena dianggap menyebabkan data leakage.
+""")
 
 # --- SIDEBAR UNTUK INPUT METODE ---
 st.sidebar.header("Pilih Metode Input Data")
@@ -29,10 +33,10 @@ if input_method == 'Manual':
         age = st.number_input('Usia', min_value=18, max_value=100, value=35)
         job = st.selectbox('Pekerjaan', ['admin.', 'technician', 'services', 'management', 'retired', 'blue-collar', 'unemployed', 'entrepreneur', 'housemaid', 'student', 'self-employed'])
         marital = st.selectbox('Status Pernikahan', ['married', 'single', 'divorced'])
-        education = st.selectbox('Pendidikan', ['basic.4y', 'basic.6y', 'basic.9y', 'high.school', 'professional.course', 'university.degree', 'illiterate', 'unknown'])
-        default = st.selectbox('Memiliki Kredit Macet?', ['yes', 'no', 'unknown'])
-        housing = st.selectbox('Memiliki Pinjaman Rumah?', ['yes', 'no', 'unknown'])
-        loan = st.selectbox('Memiliki Pinjaman Pribadi?', ['yes', 'no', 'unknown'])
+        education = st.selectbox('Pendidikan', ['basic.4y', 'basic.6y', 'basic.9y', 'high.school', 'professional.course', 'university.degree', 'illiterate'])
+        default = st.selectbox('Memiliki Kredit Macet?', ['yes', 'no'])
+        housing = st.selectbox('Memiliki Pinjaman Rumah?', ['yes', 'no'])
+        loan = st.selectbox('Memiliki Pinjaman Pribadi?', ['yes', 'no'])
 
     with col2:
         contact = st.selectbox('Jenis Kontak', ['cellular', 'telephone'])
@@ -76,16 +80,24 @@ if input_method == 'Manual':
         # Terapkan feature engineering sebelum prediksi
         input_data = feature_engineering(input_data)
 
-        # Tampilkan kolom yang ada di input
-        st.write("📊 Kolom input yang tersedia:", input_data.columns.tolist())
-        
-        # Drop kolom tidak penting jika ada
-        cols_to_drop = ['index', 'level_0']
-        for col in cols_to_drop:
+        # Drop kolom 'index' dan 'level_0' jika ada
+        for col in ['index', 'level_0']:
             if col in input_data.columns:
                 input_data.drop(columns=col, inplace=True)
-        # Tampilkan kolom input
-        st.write("📊 Kolom input yang tersedia:", input_data.columns.tolist())
+
+        # Konversi kolom kategorikal ke string agar sesuai pipeline
+        categorical_cols = ['job', 'marital', 'education', 'default', 'housing', 'loan',
+                            'contact', 'month', 'day_of_week', 'poutcome',
+                            'age_group', 'season', 'pdays_group']
+
+        for col in categorical_cols:
+            if col in input_data.columns:
+                input_data[col] = input_data[col].astype(str)
+
+        # Debug: tampilkan kolom dan tipe data input
+        st.write("📊 Kolom input setelah feature engineering dan konversi tipe:")
+        st.write(input_data.dtypes)
+        st.write(input_data.columns.tolist())
 
         # Prediksi
         hasil = model.predict(input_data)[0]
@@ -135,8 +147,3 @@ else:
                 file_name='hasil_prediksi_bank_marketing.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             )
-
-
-
-
-
