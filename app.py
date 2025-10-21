@@ -4,9 +4,8 @@ import joblib
 from io import BytesIO
 from utils import feature_engineering
 
-
 # --- LOAD MODEL ---
-model = joblib.load('best_model_pediksi_deposit.pkl')  # Ganti nama model sesuai filemu
+model = joblib.load('best_model_pediksi_deposit.pkl')
 
 # --- KONFIGURASI HALAMAN ---
 st.set_page_config(page_title="Prediksi Nasabah Melakukan Deposit Bank Marketing", layout="wide")
@@ -31,16 +30,20 @@ if input_method == 'Manual':
 
     with col1:
         age = st.number_input('Usia', min_value=18, max_value=100, value=35)
-        job = st.selectbox('Pekerjaan', ['admin.', 'technician', 'services', 'management', 'retired', 'blue-collar', 'unemployed', 'entrepreneur', 'housemaid', 'student', 'self-employed'])
+        job = st.selectbox('Pekerjaan', ['admin.', 'technician', 'services', 'management', 'retired',
+                                         'blue-collar', 'unemployed', 'entrepreneur', 'housemaid',
+                                         'student', 'self-employed'])
         marital = st.selectbox('Status Pernikahan', ['married', 'single', 'divorced'])
-        education = st.selectbox('Pendidikan', ['basic.4y', 'basic.6y', 'basic.9y', 'high.school', 'professional.course', 'university.degree', 'illiterate'])
+        education = st.selectbox('Pendidikan', ['basic.4y', 'basic.6y', 'basic.9y', 'high.school',
+                                               'professional.course', 'university.degree', 'illiterate'])
         default = st.selectbox('Memiliki Kredit Macet?', ['yes', 'no'])
         housing = st.selectbox('Memiliki Pinjaman Rumah?', ['yes', 'no'])
         loan = st.selectbox('Memiliki Pinjaman Pribadi?', ['yes', 'no'])
 
     with col2:
         contact = st.selectbox('Jenis Kontak', ['cellular', 'telephone'])
-        month = st.selectbox('Bulan Kontak Terakhir', ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'])
+        month = st.selectbox('Bulan Kontak Terakhir', ['mar', 'apr', 'may', 'jun',
+                                                       'jul', 'aug', 'sep', 'oct', 'nov', 'dec'])
         day_of_week = st.selectbox('Hari Kontak', ['mon', 'tue', 'wed', 'thu', 'fri'])
         campaign = st.number_input('Jumlah Kontak Selama Kampanye Ini', min_value=1, value=1)
         pdays = st.number_input('Hari Sejak Kontak Terakhir', min_value=0, value=999)
@@ -54,7 +57,7 @@ if input_method == 'Manual':
         euribor3m = st.number_input('Suku Bunga Euribor 3 Bulan', value=4.857)
         nr_employed = st.number_input('Jumlah Pegawai', value=5191.0)
 
-    if st.sidebar.button('Prediksi'):
+    if st.sidebar.button('Prediksi Manual'):
         input_data = pd.DataFrame([{
             'age': age,
             'job': job,
@@ -76,11 +79,10 @@ if input_method == 'Manual':
             'euribor3m': euribor3m,
             'nr.employed': nr_employed
         }])
-
+        
+        
         # Terapkan feature engineering sebelum prediksi
         input_data = feature_engineering(input_data)
-        st.write("Kolom setelah feature engineering:", input_data.columns.tolist())
-
 
         # Prediksi
         hasil = model.predict(input_data)[0]
@@ -90,6 +92,8 @@ if input_method == 'Manual':
             hasil_prediksi_section.success(f"✅ Nasabah diprediksi **BERLANGGANAN** produk. (Probabilitas: {prob:.2f})")
         else:
             hasil_prediksi_section.warning(f"⚠️ Nasabah diprediksi **TIDAK berlangganan**. (Probabilitas: {prob:.2f})")
+
+
 
 # --- UPLOAD FILE ---
 else:
@@ -101,7 +105,6 @@ else:
         else:
             df = pd.read_excel(file)
 
-        # Cek dan hapus kolom 'duration' jika ada
         if 'duration' in df.columns:
             df.drop(columns=['duration'], inplace=True)
 
@@ -109,8 +112,7 @@ else:
         st.dataframe(df)
 
         if st.sidebar.button("Prediksi dari File"):
-            # Terapkan feature engineering sebelum prediksi
-            df = feature_engineering(df)
+            # Feature engineering + reset index
 
             predictions = model.predict(df)
             probabilities = model.predict_proba(df)[:, 1]
@@ -130,5 +132,4 @@ else:
                 file_name='hasil_prediksi_bank_marketing.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             )
-
-
+###streamlit run app.py
