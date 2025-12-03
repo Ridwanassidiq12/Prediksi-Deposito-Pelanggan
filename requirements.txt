@@ -1,9 +1,11 @@
 pandas
 scikit-learn==1.6.1
 imbalanced-learn
+xgboost
 streamlit
 joblib
+numpy
 matplotlib
 seaborn
 shap
-
+plotly
