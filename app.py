@@ -104,7 +104,7 @@ else:
     if file is not None:
 
         if file.name.endswith('.csv'):
-            df = pd.read_csv(file)
+            df = pd.read_csv(file, sep=None, engine="python")  # otomatis deteksi delimiter
         else:
             df = pd.read_excel(file)
 
@@ -140,14 +140,28 @@ else:
             st.plotly_chart(fig_prob, use_container_width=True)
 
             # --- DOWNLOAD FILE ---
-            output = BytesIO()
-            with pd.ExcelWriter(output) as writer:
-                df.to_excel(writer, index=False, sheet_name='Hasil Prediksi')
 
+            # 🔹 Download Excel
+            output_excel = BytesIO()
+            with pd.ExcelWriter(output_excel, engine="openpyxl") as writer:
+                df.to_excel(writer, index=False, sheet_name='Hasil Prediksi')
+            
             st.download_button(
                 label="⬇️ Unduh Hasil Prediksi (.xlsx)",
-                data=output.getvalue(),
+                data=output_excel.getvalue(),
                 file_name='hasil_prediksi_bank_marketing.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             )
+            
+            # 🔹 Download CSV
+            csv_data = df.to_csv(index=False).encode('utf-8')
+            
+            st.download_button(
+                label="⬇️ Unduh Hasil Prediksi (.csv)",
+                data=csv_data,
+                file_name='hasil_prediksi_bank_marketing.csv',
+                mime='text/csv'
+            )
+
+
 
