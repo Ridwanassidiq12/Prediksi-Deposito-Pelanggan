@@ -141,7 +141,7 @@ else:
 
             # --- DOWNLOAD FILE ---
             output = BytesIO()
-            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            with pd.ExcelWriter(output) as writer:
                 df.to_excel(writer, index=False, sheet_name='Hasil Prediksi')
 
             st.download_button(
@@ -150,3 +150,4 @@ else:
                 file_name='hasil_prediksi_bank_marketing.xlsx',
                 mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             )
+
