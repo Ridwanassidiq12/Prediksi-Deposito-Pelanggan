@@ -1,4 +1,4 @@
-# Penggunaan Machine Learning untuk Memprediksi Deposito Pelanggan pada Bank di Portugal
+# Implementasi Machine Learning untuk prediksi nasabah potensial Pada PortBank
 Dibuat oleh Ridwan Assidiq, Cahyani Nur Patria, M Arief Widagdo
 ## Project Overview
 
