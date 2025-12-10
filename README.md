@@ -1,54 +1,101 @@
 # Implementasi Machine Learning untuk prediksi nasabah potensial Pada PortBank
-Dibuat oleh Ridwan Assidiq, Cahyani Nur Patria, M Arief Widagdo
 ## Project Overview
+#Author
 
-Projek ini menggunakan data nasabah di Portugal pada periode 2008-2013 untuk memprediksi apakah mereka akan melakukan Deposit. Fitur yang ada di dataset ini mencakup profile pelanggan dan juga keadaan social ekonomi Portugal pada periode tersebut. Analisis yang dilakukan menggunakan berbagai model, mulai dari base model sampai dengan model yang menggunakan bagging dan boosting. Final output adalah prediksi yang dapat ditest di dashboard Streamlit dengan input manual atau dengan input CSV
+Ridwan As-Sidiq
+M Arief Widagdo
 
-Prediksi Streamlit dapat diakses di [https://final-project-prediksi-deposit.streamlit.app/](https://github.com/Ridwanassidiq12/Prediksi-potensial-deposito-portbank)
+🌐 Overview
 
-Dashboard Tableau dapat diakses di https://public.tableau.com/views/DashboardNasabahPotensialDepositoPortBank/Dashboard1?:language=ko-KR&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link
-
-## Bentuk Akhir
-
-* **Model Prediktif** Model yang siap untuk produksi (`model.joblib`) dilatih untuk prediksi deposito.
-* **Analisis Notebook:** Analisis komprehensif menggunakan Jupyter Notebook yang menjelaskan ecara detila proses analisis kami
-* **Dashboard** Kami membuat dashboard streamlit dan juga dashboard tableau
-
-## Key Questions Answered
-
-1.  Bagaimana cara memprediksi pelanggan yang akan deposit dengan data yang tersedia
-2.  Apa metode yang paling efisien untuk mengevaluasi performa campaign
-3.  Model Machine Learning apa yang paling bagus, stabil, dan akurat untuk memprediksi hasil
-4.  Berapa kerugian yang mungkin timbul dan cost saving yang bisa didapat jika menggunakan Machine Learning
-
-## Insight
-
-Prediksi menggunakan Machine Learning berhasil mendapatkan nilai recall sebesar 0.73 yang berarti model berhasil memprediksi orang yang akan melakukan deposit sebanyak 73%.
+Portbank
 
 
-## Technical Details
+Portbank merupakan institusi perbankan yang melakukan kampanye pemasaran langsung (telemarketing) untuk menawarkan produk deposito berjangka kepada nasabah. Efektivitas kampanye sebelumnya belum optimal, di mana proses telemarketing memakan waktu dan sumber daya manusia yang signifikan, sementara targeting yang tidak tepat berpotensi menyebabkan hilangnya peluang pendapatan (*revenue lost*) dan biaya operasional yang sia-sia.
 
-### Sumber data
 
-Dataset berasal dari Kaggle (https://www.kaggle.com/datasets/volodymyrgavrysh/bank-marketing-campaigns-dataset?) dan diambil dari dataset bank di Portugal yang telah melakukan kampanye telemarketing selama periode 2008-2013
+Dengan tingkat konversi (deposit) yang hanya sekitar 11.3% dari total data, terjadi ketidakseimbangan kelas yang signifikan. Tantangan utamanya adalah bagaimana meningkatkan efisiensi kampanye dengan menargetkan nasabah yang memiliki probabilitas tinggi untuk berlangganan deposito, sehingga Portbank dapat menghemat biaya pemasaran dan memaksimalkan profit.
+Proyek ini bertujuan untuk menganalisis data historis pelanggan, mengidentifikasi faktor-faktor yang mempengaruhi keputusan nasabah, dan membangun model klasifikasi Machine Learning yang dapat memprediksi calon nasabah potensial secara akurat.
 
-### Tools & Libraries
 
-* **Bahasa Pemrorgraman:** Python 3
-* **Libraries:** pandas, NumPy, scikit-learn, matplotlib, seaborn, statsmodels
+🎯 Objective
 
-### Project Structure
 
-Proyek ini menggunakan struktur proyek data science standard:
-1.  **Data Cleaning & EDA:** Mendapatkan assessment untuk qualitas data, mengidentifikasikan outliers an distribusi data, serta mencari hubungan statistik antar fitur numerik dan target dan juga fitur kategorik dan target
-2.  **Preprocessing:** Membuat pipeline `ColumnTransformer` pipeline dan mengaplikasikan `RobustScaler` ke fitur numerik dan `OneHotEncoder`/`OrdinalEncoder` ke fitur kategorik untuk mencegah adanya leakage data
-3.  **Modeling & Evaluation:** Menggunakan berbagai base model (Regresi Logistic, NN, SVM) dan ensemble model (CatBoosting, Ada Boosting, Gradient Boosting) untuk mendapatkan nilai Recall yang tinggi. Model terbaik akan diuji stabilitasnya dan juga validitasnya untuk menghindari overfitting
-4.  **Optimalisasi dan Insight** Melakukan optimalisasi model dan juga melakukan resampling dikarenakan data yang sangat imbalance, model terbaik adalah **Regresi Logistik** karena memiliki nilai recall yang tinggi, tidak mengalami overfitting dan stabil. 
+Menganalisis pola perilaku nasabah dan karakteristik demografis yang membedakan antara nasabah yang berpotensi membuka deposito dan yang tidak.
+Membangun model machine learning klasifikasi untuk memprediksi probabilitas nasabah berlangganan deposito berjangka.
+Mendukung pengambilan keputusan berbasis data (Decision Support System) untuk mengoptimalkan strategi pemasaran, mengurangi biaya telemarketing yang tidak perlu (False Positive), dan meminimalkan hilangnya nasabah potensial (False Negative).
 
-### Cara menjalankan
+💡 Key Insights
 
-1.  Download Jupyter Notebook dari Repository ini
-2.  Masukan data mentah yang ada di repository ini, pastikan data sudah terupload dengan benar pada session storage.
-3.  Jalankan cell secara berurutan untuk mendapatkan hasil yang sama dengan Notebook ini
-4.  Model akan meng-output model final dalam bentuk Joblib.
-5.  Output model dapat digunakan untuk prediksi data mandiri di Streamlit dan dapat digunakan dalam proyek lain
+
+Ketidakseimbangan Data (Imbalanced Data): Dataset memiliki proporsi target yang sangat timpang (88.7% 'No' vs 11.3% 'Yes'), sehingga memerlukan teknik resampling (Random OverSampling terbukti paling efektif).
+Indikator Ekonomi Makro: Fitur `economic_stability` (gabungan dari `emp.var.rate` dan `cons.conf.idx`) menjadi indikator penting, menunjukkan bahwa kondisi ekonomi nasional mempengaruhi keputusan investasi nasabah.
+Frekuensi Kontak: Fitur `contact_count` (gabungan `campaign` dan `previous`) menunjukkan bahwa frekuensi interaksi mempengaruhi engagement; terlalu sedikit kontak mungkin kurang efektif, namun terlalu banyak bisa mengganggu.
+Beban Finansial: Nasabah dengan beban pinjaman ganda (`loan_burden`: housing + personal loan) cenderung memiliki perilaku berbeda dalam mengambil deposito baru.
+Durasi Panggilan: Fitur `duration` memiliki korelasi sangat tinggi dengan target, namun dihapus dari pemodelan untuk mencegah *data leakage* karena durasi tidak diketahui sebelum panggilan dilakukan.
+
+### Dataset
+
+```text
+01] age
+02] job
+03] marital
+04] education
+05] default
+06] housing
+07] loan
+08] contact
+09] month
+10] day_of_week
+11] duration (dropped for modeling)
+12] campaign
+13] pdays
+14] previous
+15] poutcome
+16] emp.var.rate
+17] cons.price.idx
+18] cons.conf.idx
+19] euribor3m
+20] nr.employed
+21] y (Target: Deposit Subscription)
+```
+
+
+🧠 Model Candidate
+Beberapa algoritma klasifikasi telah diuji dengan berbagai teknik resampling (SMOTE, Random UnderSampling, Random OverSampling) untuk menangani imbalanced data:
+
+Logistic Regression
+K-Nearest Neighbors (KNN)
+Decision Tree
+Random Forest
+XGBoost Classifier
+Evaluasi model difokuskan pada metrik F2-Score untuk memberikan bobot lebih pada Recall (meminimalkan False Negative/kehilangan nasabah potensial) sambil tetap menjaga Precision.
+
+✅ Model Selected and Evaluation
+Model terbaik yang dipilih adalah **Logistic Regression** dengan teknik **Random OverSampling**. Model ini dipilih setelah melalui Hyperparameter Tuning (GridSearch) karena memberikan keseimbangan terbaik antara bias dan variance serta performa F2-Score yang stabil.
+
+**Best Parameters:** `C=10`, `penalty='l1'`, `solver='liblinear'`
+
+**Performance Metrics**
+| Metric | Score (Test) |
+|--------|--------------|
+| **F2-Score** | **0.5358** |
+| Recall | 0.6422 |
+| Precision | 0.3222 |
+| ROC-AUC | 0.79 |
+
+**Evaluasi Overfitting:**
+Perbedaan antara F2-Score Train (0.5407) dan Test (0.5358) sangat kecil (< 1%), menandakan model **Robust** dan tidak mengalami overfitting (Good Fit).
+
+⭐️ Kesimpulan
+Berdasarkan hasil analisis dan pemodelan pada data Bank Marketing Portugal:
+
+1.  **Faktor Penentu:** Kondisi ekonomi makro dan riwayat interaksi sebelumnya merupakan faktor krusial dalamn prediksi. Stabilitas ekonomi dan pendekatan kontak yang tepat sasaran meningkatkan peluang keberhasilan.
+2.  **Performa Model:** Model Logistic Regression mendapatkan F2 score sebesar  **0.53** dari total nasabah potensial, dengan kemampuan membedakan kelas positif dan negatif yang baik (AUC 0.79).
+3.  **Strategi Bisnis:** Penggunaan model memungkinkan bank untuk beralih dari strategi "menelepon semua orang" menjadi pendekatan yang terarah. Nasabah yang diprediksi memiliki probabilitas tinggi akan diprioritaskan, menghemat sumber daya manusia dan biaya operasional.
+4.  **Rekomendasi:** Gunakan *threshold adjustment* (seperti Youden’s J Statistic: 0.52) untuk menyeimbangkan antara menangkap peluang deposito dan biaya operasional, sesuai dengan selera risiko bisnis saat ini.
+
+
+- [Link Presentasi (Canva)](https://www.canva.com/design/DAG6QoMcmy0/5GVfHejCRV-PT5aORdauQw/edit)
+- [Link Tableau](https://public.tableau.com/app/profile/sidiq.qq/viz/shared/6723P9P53)
+- [Link Streamlit](https://final-project-prediksi-deposit.streamlit.app/)
+
