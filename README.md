@@ -5,7 +5,7 @@ Dibuat oleh Ridwan Assidiq, Cahyani Nur Patria, M Arief Widagdo
 Projek ini menggunakan data nasabah di Portugal pada periode 2008-2013 untuk memprediksi apakah mereka akan melakukan Deposit. Fitur yang ada di dataset ini mencakup profile pelanggan dan juga keadaan social ekonomi Portugal pada periode tersebut. Analisis yang dilakukan menggunakan berbagai model, mulai dari base model sampai dengan model yang menggunakan bagging dan boosting. Final output adalah prediksi yang dapat ditest di dashboard Streamlit dengan input manual atau dengan input CSV
 
 Prediksi Streamlit dapat diakses di https://final-project-prediksi-deposit.streamlit.app/
-Dashboard Tableau dapat diakses di https://public.tableau.com/app/profile/cahyani.nur/viz/FinalProject-BankMarketing/Dashboard1?publish=yes
+Dashboard Tableau dapat diakses di https://public.tableau.com/views/DashboardNasabahPotensialDepositoPortBank/Dashboard1?:language=ko-KR&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link
 
 ## Bentuk Akhir
 
