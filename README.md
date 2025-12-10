@@ -51,6 +51,3 @@ Proyek ini menggunakan struktur proyek data science standard:
 3.  Jalankan cell secara berurutan untuk mendapatkan hasil yang sama dengan Notebook ini
 4.  Model akan meng-output model final dalam bentuk Joblib.
 5.  Output model dapat digunakan untuk prediksi data mandiri di Streamlit dan dapat digunakan dalam proyek lain
-
-
-
